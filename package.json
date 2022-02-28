@@ -30,6 +30,11 @@
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-react": "^0.8.0",
-        "@inertiajs/progress": "^0.2.7"
+        "@inertiajs/progress": "^0.2.7",
+        "classnames": "^2.3.1",
+        "react-semantic-ui-datepickers": "^2.16.1",
+        "semantic-ui-css": "^2.4.1",
+        "semantic-ui-react": "^2.1.2",
+        "sweetalert2": "^11.4.4"
     }
 }

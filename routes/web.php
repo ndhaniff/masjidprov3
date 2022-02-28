@@ -13,7 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index']);
+Route::group(['middleware' => 'auth'], function () {
+  Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+  Route::get('/qariah/add', [App\Http\Controllers\Admin\QariahController::class, 'add'])->name('qariah.add');
+  Route::put('/qariah/{id}', [App\Http\Controllers\Admin\QariahController::class, 'update'])->name('qariah.update');
+  Route::get('/qariah/{id}', [App\Http\Controllers\Admin\QariahController::class, 'show'])->name('qariah.show');
+  Route::post('/qariah/create', [App\Http\Controllers\Admin\QariahController::class, 'store'])->name('qariah.create');
+  Route::get('/qariah', [App\Http\Controllers\Admin\QariahController::class, 'index'])->name('qariah');
+});
 
 Auth::routes();
 

@@ -2,19 +2,18 @@
 
 namespace Database\Seeders;
 
+use App\Models\Qariah;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class QariahTableSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        $this->call([
-            QariahTableSeeder::class
-        ]);
+        Qariah::factory(30)->create();
     }
 }

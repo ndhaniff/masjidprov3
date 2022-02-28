@@ -1,9 +1,12 @@
 import React from 'react'
+import Admin from '../Layouts/Admin'
 
 function Dashboard() {
   return (
-    <div className='text-3xl text-red-500'>Dashboard</div>
+    <h1>Utama</h1>
   )
 }
+
+Dashboard.layout = page => <Admin children={page}></Admin>
 
 export default Dashboard
