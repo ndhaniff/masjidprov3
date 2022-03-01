@@ -30,7 +30,7 @@ function Add() {
   const [tel, setTel] = useState('+60')
   const [hometel, setHometel] = useState('')
   const [officetel, setOfficetel] = useState('')
-  const [dob, setDob] = useState('')
+  const [dob, setDob] = useState(new Date())
   const [sex, setSex] = useState('')
   const [nationality, setNationality] = useState('')
   const [population, setPopulation] = useState('')
@@ -186,6 +186,10 @@ function Add() {
     }
   }, [errors])
 
+  const getDobValue = (date) => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+  }
+
   const getData = () => {
     return {
       general: {
@@ -196,7 +200,7 @@ function Add() {
         tel,
         hometel,
         officetel,
-        dob,
+        dob: getDobValue(dob),
         sex,
         nationality,
         population,
@@ -259,6 +263,7 @@ function Add() {
 
   const handleUpdate = (e) => {
     e.preventDefault()
+    console.log(qariah)
     if (qariah) {
       Inertia.put('/qariah/' + qariah.id, getData())
     }
@@ -277,6 +282,8 @@ function Add() {
 ########################################
 */}
       <div className="">
+        <h1 className='mb-1'>A: Maklumat Qariah</h1>
+        <p>Maklumat ketua keluarga</p>
         {mode == 'view' && <Message
           info
           header='Anda didalam mode baca'
@@ -294,14 +301,14 @@ function Add() {
             <Form.Input readOnly={mode == 'view'} value={oldic} error={errors.hasOwnProperty('general.oldic')} onChange={mode == 'view' ? () => { } : (e, { value }) => setOldic(value)} label='No K/P Lama' width={4} />
             <Form.Input readOnly={mode == 'view'} value={newic} error={errors.hasOwnProperty('general.newic')} onChange={mode == 'view' ? () => { } : (e, { value }) => setNewic(value)} required label='No K/P Baru' width={4} />
           </Form.Group>
-          <Form.Input readOnly={mode == 'view'} value={name} onChange={mode == 'view' ? () => { } : (e, { value }) => setName(value)} error={errors.hasOwnProperty('general.name')} required label="Nama" />
+          <Form.Input readOnly={mode == 'view'} value={name} onChange={mode == 'view' ? () => { } : (e, { value }) => setName(value)} error={errors.hasOwnProperty('general.name')} required label="Nama Penuh (Seperti di dalam kad pengenalan.)" />
           <Form.Input readOnly={mode == 'view'} value={address} onChange={mode == 'view' ? () => { } : (e, { value }) => setAddress(value)} error={errors.hasOwnProperty('general.address')} required label="Alamat" />
           <Form.Group>
             <Form.Input readOnly={mode == 'view'} value={tel} onChange={mode == 'view' ? () => { } : (e, { value }) => setTel(value)} label='No Tel' width={4} />
             <Form.Input readOnly={mode == 'view'} value={hometel} onChange={mode == 'view' ? () => { } : (e, { value }) => setHometel(value)} label='No Tel Rumah' width={4} />
             <Form.Input readOnly={mode == 'view'} value={officetel} onChange={mode == 'view' ? () => { } : (e, { value }) => setOfficetel(value)} label='No Tel Pejabat' width={4} />
           </Form.Group>
-          <SemanticDatepicker value={dob} onChange={mode == 'view' ? () => { } : (e, { value }) => setDob(value)} error={errors.hasOwnProperty('general.dob')} label="Tarikh Lahir" onChange={mode == 'view' ? () => { } : () => { }} />
+          <SemanticDatepicker value={dob} onChange={mode == 'view' ? () => { } : (e, { value }) => setDob(value)} error={errors.hasOwnProperty('general.dob')} label="Tarikh Lahir" />
           <div className="grid grid-cols-5 gap-4">
             <div className="required field">
               <label>Jantina</label>
@@ -634,25 +641,35 @@ function Add() {
 
       {mode != 'edit' && mode != 'view' && <Button className='fixed top-[12vh] right-[3vw] z-[3000] shadow-lg' type="submit" primary onClick={(e) => { handleSubmit(e) }}>
         <div className="flex items-center">
-          <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
             <path fill="none" d="M0 0h24v24H0z" />
             <path fill="currentColor" d="M7 19v-6h10v6h2V7.828L16.172 5H5v14h2zM4 3h13l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm5 12v4h6v-4H9z" /></svg>
           <span>Simpan</span>
         </div>
       </Button>}
 
-      {mode != 'edit' && mode != 'add' && <Button type="submit" className='fixed top-[12vh] right-[3vw] z-[3000] shadow-lg' primary onClick={(e) => { e.preventDefault(); setMode('edit') }}>
-        <div className="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-            <path fill="none" d="M0 0h24v24H0z" />
-            <path fill="currentColor" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z" /></svg>
-          <span>Edit</span>
-        </div>
-      </Button>}
+      {mode != 'edit' && mode != 'add' && <div className='fixed top-[12vh] right-[3vw] z-[3000] '>
+        <Button basic color="blue" type="submit" className='shadow-lg' onClick={(e) => { e.preventDefault(); Inertia.visit('/qariah/relatives/add/' + qariah.id) }}>
+          <div className="flex items-center">
+            <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path fill="currentColor" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z" /></svg>
+            <span>Tambah Tanggungan</span>
+          </div>
+        </Button>
+        <Button type="submit" className='shadow-lg' primary onClick={(e) => { e.preventDefault(); setMode('edit') }}>
+          <div className="flex items-center">
+            <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path fill="currentColor" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z" /></svg>
+            <span>Edit</span>
+          </div>
+        </Button>
+      </div>}
 
       {mode != 'view' && mode != 'add' && <Button type="submit" className='fixed top-[12vh] right-[3vw] z-[3000] shadow-lg' primary onClick={(e) => handleUpdate(e)}>
         <div className="flex items-center">
-          <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
             <path fill="none" d="M0 0h24v24H0z" />
             <path fill="currentColor" d="M7 19v-6h10v6h2V7.828L16.172 5H5v14h2zM4 3h13l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm5 12v4h6v-4H9z" /></svg>
           <span>Kemaskini</span>

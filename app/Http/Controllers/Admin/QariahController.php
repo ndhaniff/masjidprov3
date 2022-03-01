@@ -12,7 +12,7 @@ class QariahController extends Controller
 {
     public function index()
     {
-        $qariahs = Qariah::paginate(10);
+        $qariahs = Qariah::orderBy('created_at', 'desc')->paginate(10);
         return Inertia::render('Qariah/Qariah', compact('qariahs'));
     }
 
@@ -64,15 +64,28 @@ class QariahController extends Controller
         $request->validate([
             'general' => 'required|array',
             'general.newic' => 'required|numeric',
-            'general.oldic' => 'sometimes|numeric',
             'general.name' => 'required|string',
             'general.address' => 'required|string',
-            'general.sex' => 'required|string',
+            'general.sex' => 'required|numeric',
             'general.dob' => 'required|date',
-            'general.nationality' => 'required|string',
+            'general.nationality' => 'required|numeric',
         ]);
 
-        dd($request->all());
+        $dataToInsert = $this->mapData($request->only([
+            'general',
+            'marital',
+            'health',
+            'education',
+            'occupation',
+            'properties',
+            'utilities',
+            'others'
+        ]));
+
+        Qariah::create($dataToInsert);
+
+        $qariahs = Qariah::paginate(10);
+        return redirect()->route('qariah', compact('qariahs'));
     }
 
     public function mapData($data)
@@ -118,6 +131,18 @@ class QariahController extends Controller
                 'land_status' => $data['properties']['landStatus'],
                 'other_owned_level' => $data['properties']['otherOwnedLevel']
             ], true, JSON_UNESCAPED_SLASHES),
+            'occupation' => json_encode([
+                'income' => $data['occupation']['income'],
+                'sector' => $data['occupation']['workSector'],
+                'status' => $data['occupation']['employed'],
+                'occupation' => $data['occupation']['occupation'],
+                'title' => $data['occupation']['workTitle'],
+                'business_occupation' => $data['occupation']['typeOfBusiness'],
+                'previous_sector' => $data['occupation']['previousSector'],
+                'employees_name_and_address' => $data['occupation']['nameAndPlaceOfWork'],
+                'sideincome' => $data['occupation']['sideIncome'],
+                'other_sideincome' => $data['occupation']['otherSideIncome']
+            ], true, JSON_UNESCAPED_SLASHES),
             'others' => json_encode([
                 'vehicle' => $data['others']['vehicle'],
                 'help_type' => $data['others']['typeOfHelp'],
@@ -133,5 +158,15 @@ class QariahController extends Controller
     public function add()
     {
         return Inertia::render('Qariah/Add', ['panelMode' => 'add']);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $qariah = Qariah::find($id) ?? abort(404, 'not_found');
+        $qariah->delete();
+
+        $qariahs = Qariah::paginate(10);
+
+        return redirect()->route('qariah', compact('qariahs'));
     }
 }

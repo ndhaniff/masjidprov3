@@ -207,5 +207,48 @@ export default {
       { key: 4, value: 4, text: 'Orang Perseorangan' },
       { key: 5, value: 5, text: 'Lain-lain' },
     ]
+  },
+  "relative": {
+    "physical": [
+      { key: 'S', value: 'S', text: 'Sihat Walafiat' },
+      { key: 'U', value: 'U', text: 'Uzur' },
+      { key: 'T', value: 'T', text: 'Tua' },
+      { key: 'C', value: 'C', text: 'Cacat' },
+    ],
+    "relationship": [
+      { key: 'L', value: 'L', text: 'Anak Lelaki' },
+      { key: 'P', value: 'P', text: 'Anak Perempuan' },
+      { key: 'I', value: 'I', text: 'Isteri' },
+      { key: 'E', value: 'E', text: 'Emak' },
+      { key: 'A', value: 'A', text: 'Ayah/Bapa' },
+      { key: 'S', value: 'S', text: 'Suami' },
+      { key: 'B', value: 'B', text: 'Saudara Perempuan' },
+      { key: 'c', value: 'c', text: 'Cucu / Cicit' },
+      { key: 'D', value: 'D', text: 'Datuk' },
+      { key: 'J', value: 'J', text: 'Saudara Lelaki' },
+      { key: 'N', value: 'N', text: 'Nenek' },
+      { key: 'z', value: 'z', text: 'Penjaga' },
+    ],
+    "sex": [
+      { key: 'L', value: 'L', text: 'Lelaki' },
+      { key: 'P', value: 'P', text: 'Perempuan' },
+      { key: 'K', value: 'K', text: 'Khunsa' },
+    ],
+    "education": [
+      { key: 't', value: 't', text: 'Tidak Bersekolah' },
+      { key: 'SR', value: 'SR', text: 'Sekolah Rendah' },
+      { key: 'SP', value: 'SP', text: 'Sekolah Pondok' },
+      { key: 'SA', value: 'SA', text: 'Sekolah Agama' },
+      { key: 'SRP', value: 'SRP', text: 'SRP' },
+      { key: 'PMR', value: 'PMR', text: 'PMR' },
+      { key: 'SPM', value: 'SPM', text: 'SPM' },
+      { key: 'SPMV', value: 'SPMV', text: 'SPMV' },
+      { key: 'vokasional', value: 'vokasional', text: 'Vokasional' },
+      { key: 'teknik', value: 'teknik', text: 'Teknik' },
+      { key: 'instkemahiran', value: 'instkemahiran', text: 'Institut Kemahiran' },
+      { key: 'matrikulasi', value: 'matrikulasi', text: 'Matrikulasi' },
+      { key: 'diploma', value: 'diploma', text: 'Diploma' },
+      { key: 'ijazah', value: 'ijazah', text: 'Ijazah' },
+    ]
   }
 }

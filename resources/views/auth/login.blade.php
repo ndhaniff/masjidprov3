@@ -1,79 +1,60 @@
 @extends('layouts.page')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<section class="flex flex-col md:flex-row h-screen items-center">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+  <div class="bg-sky-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
+    <img src="/images/masjidcherok.png" alt="" class="w-full h-full object-cover">
+  </div>
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address')
-                                }}</label>
+  <div class="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
+        flex items-center justify-center">
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                    name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+    <div class="w-full h-100">
 
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+      <img src="/images/logomasjid.png" class="mx-auto" alt="">
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password')
-                                }}</label>
+      <h1 class="text-xl md:text-2xl font-bold leading-tight mt-12 text-center">Selamat Datang ke Sistem Pengurusan
+        MJCTB</h1>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password"
-                                    class="form-control @error('password') is-invalid @enderror" name="password"
-                                    required autocomplete="current-password">
+      <form action="{{ route('login') }}" class="mt-6" method="POST">
+        @csrf
+        <div>
+          <label class="block text-gray-700">Alamat Email</label>
+          <input type="email" value="{{old('email')}}" name="email" id="" placeholder="Email"
+            class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 @error('email') !border-red-500 @enderror focus:bg-white focus:outline-none"
+            autofocus autocomplete required>
 
-                                @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{
-                                        old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+          @error('email')
+          <span class="text-red-500" role="alert">
+            <strong>{{ $message }}</strong>
+          </span>
+          @enderror
         </div>
+
+        <div class="mt-4">
+          <label class="block text-gray-700">Kata Kunci</label>
+          <input type="password" name="password" value="{{old('password')}}" id="" placeholder="Kata Kunci"
+            minlength="6" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
+            @error('password') !border-red-500 @enderror focus:bg-white focus:outline-none" required>
+          @error('password')
+          <span class="text-red-500" role="alert">
+            <strong>{{ $message }}</strong>
+          </span>
+          @enderror
+        </div>
+
+        <div class="text-right mt-2">
+          <a href="/password/reset"
+            class="text-sm font-semibold text-gray-700 hover:text-sky-600 focus:text-sky-600">Lupa Kata
+            Laluan</a>
+        </div>
+
+        <button type="submit" class="w-full block bg-sky-500 hover:bg-sky-400 focus:bg-sky-400 text-white font-semibold rounded-lg
+              px-4 py-3 mt-6">Log Masuk</button>
+      </form>
     </div>
-</div>
+  </div>
+
+</section>
 @endsection

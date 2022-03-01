@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Qariah;
+use App\Models\QariahRelative;
 use Illuminate\Database\Seeder;
 
 class QariahTableSeeder extends Seeder
@@ -14,6 +15,16 @@ class QariahTableSeeder extends Seeder
      */
     public function run()
     {
-        Qariah::factory(30)->create();
+        Qariah::factory(10)
+            ->has(QariahRelative::factory()->count(rand(1, 3)), 'relatives')
+            ->create();
+        Qariah::factory(10)
+            ->has(QariahRelative::factory()->count(rand(1, 3)), 'relatives')
+            ->create();
+        Qariah::factory(5)
+            ->has(QariahRelative::factory()->count(rand(1, 3)), 'relatives')
+            ->create();
+        Qariah::factory(5)
+            ->create();
     }
 }

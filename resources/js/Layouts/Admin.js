@@ -59,6 +59,9 @@ function Admin({ children }) {
         <div className="page-content mt-[60px] p-10">
           {children}
         </div>
+        <footer className='bg-white border-t border-slate-300 p-2 fixed bottom-0 left-0 md:left-[240px] text-center w-full md:w-[calc(100vw-240px)]'>
+          <div>Dijahit khas oleh <a href="https://mercuweb.com" target="_blank">Mercuweb</a> &copy; {new Date().getFullYear()}</div>
+        </footer>
       </div>
     </div >
   )

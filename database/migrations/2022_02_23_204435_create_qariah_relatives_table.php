@@ -19,7 +19,8 @@ class CreateQariahRelativesTable extends Migration
             $table->string('full_name');
             $table->string('old_ic')->nullable();
             $table->string('new_ic')->nullable();
-            $table->integer('sex');
+            $table->string('sex');
+            $table->date('dob');
             $table->integer('age');
             $table->string('physical');
             $table->string('relationship');
