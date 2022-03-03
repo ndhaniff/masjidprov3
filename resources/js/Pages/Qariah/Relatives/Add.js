@@ -8,6 +8,11 @@ import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 import { Inertia } from '@inertiajs/inertia'
 import Swal from 'sweetalert2'
 
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import { TextField } from '@mui/material';
+
 const errorsMap = {
   "full_name": "Nama",
   "newic": "No K/P",
@@ -55,6 +60,34 @@ function Add() {
   const getDobValue = (date) => {
     return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`
   }
+
+  const validateNumberOnly = (e) => {
+    let theEvent = e || window.event;
+    let key;
+
+    // Handle paste
+    if (theEvent.type === "paste") {
+      key = window.event.clipboardData.getData("text/plain");
+    } else {
+      // Handle key press
+      key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]|\./;
+    if (!regex.test(key)) {
+      theEvent.returnValue = false;
+      if (theEvent.preventDefault) theEvent.preventDefault();
+    }
+  };
+
+  const handleIcChange = (e) => {
+    let value = e.target.value;
+    if (value.length == 6 || value.length == 9) {
+      setNew_ic(value + "-");
+    } else {
+      setNew_ic(value);
+    }
+  };
 
   useEffect(() => {
     if (flash) {
@@ -147,7 +180,7 @@ function Add() {
         <div className='p-10 mb-10 bg-white relative z-[10] rounded-md drop-shadow'>
           <Form.Group>
             <Form.Input label="No K.P Lama" readOnly={mode == 'view'} value={old_ic} onChange={mode == 'view' ? () => { } : (e, { value }) => setOldic(value)} error={errors.hasOwnProperty('old_ic')} width={4}></Form.Input>
-            <Form.Input label="No K.P Baru / Surat Beranak" readOnly={mode == 'view'} value={new_ic} onChange={mode == 'view' ? () => { } : (e, { value }) => setNew_ic(value)} error={errors.hasOwnProperty('new_ic')} width={4}></Form.Input>
+            <Form.Input maxLength={14} label="No K.P Baru / Surat Beranak" readOnly={mode == 'view'} value={new_ic} onChange={mode == 'view' ? () => { } : (e) => handleIcChange(e)} error={errors.hasOwnProperty('new_ic')} width={4}></Form.Input>
           </Form.Group>
           <Form.Input error={errors.hasOwnProperty('full_name')} value={full_name} width={10} onChange={mode == 'view' ? () => { } : (e, { value }) => setFull_name(value)} label="Nama Penuh"></Form.Input>
 
@@ -160,7 +193,21 @@ function Add() {
               <Form.Input label="Umur" max="100" type="number" readOnly={mode == 'view'} value={age} onChange={mode == 'view' ? () => { } : (e, { value }) => setAge(value)} error={errors.hasOwnProperty('age')} ></Form.Input>
             </div>
             <div className="col-span-3">
-              <SemanticDatepicker value={dob} onChange={mode == 'view' ? () => { } : (e, { value }) => setDob(value)} error={errors.hasOwnProperty('dob')} label="Tarikh Lahir" />
+              <div className="field datepicker">
+                <label>Tarikh Lahir</label>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    hiddenLabel
+                    value={dob}
+                    inputFormat="dd/MM/yyyy"
+                    onChange={(newValue) => {
+                      setDob(newValue)
+                    }}
+                    renderInput={(params) => <TextField
+                      hiddenLabel {...params} />}
+                  />
+                </LocalizationProvider>
+              </div>
             </div>
           </div>
 
@@ -186,42 +233,48 @@ function Add() {
           </div>
         </div>
 
-        {mode != 'edit' && mode != 'view' && <Button className='fixed top-[12vh] right-[3vw] z-[3000] shadow-lg' type="submit" primary onClick={(e) => { handleSubmit(e) }}>
-          <div className="flex items-center">
-            <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-              <path fill="none" d="M0 0h24v24H0z" />
-              <path fill="currentColor" d="M7 19v-6h10v6h2V7.828L16.172 5H5v14h2zM4 3h13l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm5 12v4h6v-4H9z" /></svg>
-            <span>Simpan</span>
-          </div>
-        </Button>}
-
-        {mode != 'edit' && mode != 'add' && <div className='fixed top-[12vh] right-[3vw] z-[3000] '>
-          <Button type="submit" className='shadow-lg mr-2' basic color="blue" onClick={(e) => { e.preventDefault(); Inertia.visit('/qariah/relatives/list/' + parentId, { method: 'get' }) }}>
-            <div className="flex items-center">
-              <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"><path fill="none" d="M0 0h24v24H0z" /><path fill="currentColor" d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" /></svg>
-              <span>Kembali ke Senarai Tanggungan</span>
-            </div>
-          </Button>
-          <Button type="submit" className='shadow-lg' primary onClick={(e) => { e.preventDefault(); setMode('edit') }}>
+        {
+          mode != 'edit' && mode != 'view' && <Button className='fixed top-[12vh] right-[3vw] z-[3000] shadow-lg' type="submit" primary onClick={(e) => { handleSubmit(e) }}>
             <div className="flex items-center">
               <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                 <path fill="none" d="M0 0h24v24H0z" />
-                <path fill="currentColor" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z" /></svg>
-              <span>Edit</span>
+                <path fill="currentColor" d="M7 19v-6h10v6h2V7.828L16.172 5H5v14h2zM4 3h13l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm5 12v4h6v-4H9z" /></svg>
+              <span>Simpan</span>
             </div>
           </Button>
-        </div>}
+        }
 
-        {mode != 'view' && mode != 'add' && <Button type="submit" className='fixed top-[12vh] right-[3vw] z-[3000] shadow-lg' primary onClick={(e) => handleUpdate(e)}>
-          <div className="flex items-center">
-            <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-              <path fill="none" d="M0 0h24v24H0z" />
-              <path fill="currentColor" d="M7 19v-6h10v6h2V7.828L16.172 5H5v14h2zM4 3h13l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm5 12v4h6v-4H9z" /></svg>
-            <span>Kemaskini</span>
+        {
+          mode != 'edit' && mode != 'add' && <div className='fixed top-[12vh] right-[3vw] z-[3000] '>
+            <Button type="submit" className='shadow-lg mr-2' basic color="blue" onClick={(e) => { e.preventDefault(); Inertia.visit('/qariah/relatives/list/' + parentId, { method: 'get' }) }}>
+              <div className="flex items-center">
+                <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"><path fill="none" d="M0 0h24v24H0z" /><path fill="currentColor" d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" /></svg>
+                <span>Kembali ke Senarai Tanggungan</span>
+              </div>
+            </Button>
+            <Button type="submit" className='shadow-lg' primary onClick={(e) => { e.preventDefault(); setMode('edit') }}>
+              <div className="flex items-center">
+                <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                  <path fill="none" d="M0 0h24v24H0z" />
+                  <path fill="currentColor" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z" /></svg>
+                <span>Edit</span>
+              </div>
+            </Button>
           </div>
-        </Button>}
-      </Form>
-    </div>
+        }
+
+        {
+          mode != 'view' && mode != 'add' && <Button type="submit" className='fixed top-[12vh] right-[3vw] z-[3000] shadow-lg' primary onClick={(e) => handleUpdate(e)}>
+            <div className="flex items-center">
+              <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                <path fill="none" d="M0 0h24v24H0z" />
+                <path fill="currentColor" d="M7 19v-6h10v6h2V7.828L16.172 5H5v14h2zM4 3h13l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm5 12v4h6v-4H9z" /></svg>
+              <span>Kemaskini</span>
+            </div>
+          </Button>
+        }
+      </Form >
+    </div >
   )
 }
 

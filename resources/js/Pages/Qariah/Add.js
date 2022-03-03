@@ -9,6 +9,11 @@ import { usePage } from '@inertiajs/inertia-react'
 import { Inertia } from '@inertiajs/inertia';
 import Swal from 'sweetalert2'
 
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import { TextField } from '@mui/material';
+
 const errorsMap = {
   "general.name": "Nama",
   "general.newic": "No K/P",
@@ -274,6 +279,34 @@ function Add() {
     Inertia.post('/qariah/create', getData())
   }
 
+  const validateNumberOnly = (e) => {
+    let theEvent = e || window.event;
+    let key;
+
+    // Handle paste
+    if (theEvent.type === "paste") {
+      key = window.event.clipboardData.getData("text/plain");
+    } else {
+      // Handle key press
+      key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]|\./;
+    if (!regex.test(key)) {
+      theEvent.returnValue = false;
+      if (theEvent.preventDefault) theEvent.preventDefault();
+    }
+  };
+
+  const handleIcChange = (e) => {
+    let value = e.target.value;
+    if (value.length == 6 || value.length == 9) {
+      setNewic(value + "-");
+    } else {
+      setNewic(value);
+    }
+  };
+
   return (
     <Form className="relative z-10">
       {/* 
@@ -299,7 +332,7 @@ function Add() {
           <h3 className="mb-4">Maklumat Asas</h3>
           <Form.Group>
             <Form.Input readOnly={mode == 'view'} value={oldic} error={errors.hasOwnProperty('general.oldic')} onChange={mode == 'view' ? () => { } : (e, { value }) => setOldic(value)} label='No K/P Lama' width={4} />
-            <Form.Input readOnly={mode == 'view'} value={newic} error={errors.hasOwnProperty('general.newic')} onChange={mode == 'view' ? () => { } : (e, { value }) => setNewic(value)} required label='No K/P Baru' width={4} />
+            <Form.Input maxLength={14} readOnly={mode == 'view'} value={newic} error={errors.hasOwnProperty('general.newic')} onChange={mode == 'view' ? () => { } : (e) => handleIcChange(e)} required label='No K/P Baru' width={4} />
           </Form.Group>
           <Form.Input readOnly={mode == 'view'} value={name} onChange={mode == 'view' ? () => { } : (e, { value }) => setName(value)} error={errors.hasOwnProperty('general.name')} required label="Nama Penuh (Seperti di dalam kad pengenalan.)" />
           <Form.Input readOnly={mode == 'view'} value={address} onChange={mode == 'view' ? () => { } : (e, { value }) => setAddress(value)} error={errors.hasOwnProperty('general.address')} required label="Alamat" />
@@ -308,7 +341,23 @@ function Add() {
             <Form.Input readOnly={mode == 'view'} value={hometel} onChange={mode == 'view' ? () => { } : (e, { value }) => setHometel(value)} label='No Tel Rumah' width={4} />
             <Form.Input readOnly={mode == 'view'} value={officetel} onChange={mode == 'view' ? () => { } : (e, { value }) => setOfficetel(value)} label='No Tel Pejabat' width={4} />
           </Form.Group>
-          <SemanticDatepicker value={dob} onChange={mode == 'view' ? () => { } : (e, { value }) => setDob(value)} error={errors.hasOwnProperty('general.dob')} label="Tarikh Lahir" />
+
+          <div className="field wide datepicker three">
+            <label>Tarikh Lahir</label>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                hiddenLabel
+                value={dob}
+                inputFormat="dd/MM/yyyy"
+                onChange={(newValue) => {
+                  setDob(newValue)
+                }}
+                renderInput={(params) => <TextField
+                  hiddenLabel {...params} />}
+              />
+            </LocalizationProvider>
+          </div>
+
           <div className="grid grid-cols-5 gap-4">
             <div className="required field">
               <label>Jantina</label>
@@ -496,7 +545,7 @@ function Add() {
             <Select value={previousSector} onChange={mode == 'view' ? () => { } : (e, { value }) => setPreviousSector(value)} placeholder='Jika Pesara, Sila nyatakan sektor pekerjaan sebelumnya' options={Data['previous_work_sector']} />
           </div>
 
-          <div className="income w-1/2 field">
+          <div className="w-1/2 income field">
             <label>Pendapatan</label>
             <Select value={income} onChange={mode == 'view' ? () => { } : (e, { value }) => setIncome(value)} placeholder='Pendapatan' options={Data['income']} />
           </div>
@@ -525,7 +574,7 @@ function Add() {
         <div className="grid grid-cols-5 gap-4">
           <div className="field">
             <label>Struktur Binaan</label>
-            <Select value={buildingStructure} onChange={mode == 'view' ? () => { } : (e, { value }) => buildingStructure(value)} placeholder='Struktur Binaan' options={Data['properties']['structure']} />
+            <Select value={buildingStructure} onChange={mode == 'view' ? () => { } : (e, { value }) => setBuildingStructure(value)} placeholder='Struktur Binaan' options={Data['properties']['structure']} />
           </div>
           <div className="field">
             <label>Taraf Pemilikan Rumah</label>
@@ -571,11 +620,11 @@ function Add() {
 ########################################
 */}
 
-      <div className='p-10 mb-10 bg-white relative z-10 rounded-md drop-shadow'>
+      <div className='relative z-10 p-10 mb-10 bg-white rounded-md drop-shadow'>
         <h3>Lain-lain</h3>
         <div className="grid grid-cols-5 gap-4">
           <div className="field">
-            <div style={{ marginBottom: 0 }} className="grid field grid-cols-2 gap-4">
+            <div style={{ marginBottom: 0 }} className="grid grid-cols-2 gap-4 field">
               <label>Jenis Kenderaan</label>
               <label>Bilangan</label>
             </div>
