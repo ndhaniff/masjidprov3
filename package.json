@@ -37,6 +37,8 @@
         "@mui/material": "^5.4.4",
         "classnames": "^2.3.1",
         "date-fns": "^2.28.0",
+        "fomantic-ui-css": "^2.8.8",
+        "react-datepicker": "^4.8.0",
         "react-semantic-ui-datepickers": "^2.16.1",
         "semantic-ui-css": "^2.4.1",
         "semantic-ui-react": "^2.1.2",

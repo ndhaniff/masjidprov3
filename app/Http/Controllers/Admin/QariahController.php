@@ -6,13 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Qariah;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class QariahController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $qariahs = Qariah::orderBy('created_at', 'desc')->paginate(10);
+        $qariahs = Qariah::select(['*', DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')")])->when($request->has('name'), function ($q) {
+            $q->whereRaw("LOWER(name) like '%" . request()->name . "%'");
+        })->when($request->has('start') && $request->has('end'), function ($q) {
+            $start = Carbon::parse(request()->start)->format('Y-m-d') . ' 00:00:00';
+            $end = Carbon::parse(request()->end)->format('Y-m-d') .  ' 23:59:00';
+            $q->whereBetween('created_at', [$start, $end]);
+        })
+            ->orderBy('created_at', 'desc')->orderBy('name', 'asc')->paginate(10);
         return Inertia::render('Qariah/Qariah', compact('qariahs'));
     }
 

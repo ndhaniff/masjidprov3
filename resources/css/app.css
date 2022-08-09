@@ -12,3 +12,13 @@
     opacity: 1;
     z-index: 20;
 }
+
+.daterangepicker input {
+    padding: 8px 20px;
+    background: white;
+}
+
+.daterangepicker label {
+    line-height: 0.8rem;
+    color: #ccc;
+}

@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
 import Admin from '../../Layouts/Admin'
-import { Icon, Label, Menu, Table, Button, Dropdown } from 'semantic-ui-react'
+import { Icon, Label, Menu, Table, Button, Dropdown, Form } from 'semantic-ui-react'
 import { Link, usePage } from '@inertiajs/inertia-react'
 import classNames from 'classnames'
 import { Inertia } from '@inertiajs/inertia'
 import Swal from 'sweetalert2'
 import { _i } from '../../utils'
+
+import { TextField } from '@mui/material';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import { DateRangePicker } from '@mui/lab'
+import { Box } from '@mui/system'
+
+import { format } from 'date-fns'
 
 const options = [
   { key: 'edit', icon: 'edit', text: 'Edit', value: 'edit' },
@@ -14,6 +23,9 @@ const options = [
 
 function Qariah() {
   const { qariahs } = usePage().props
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [sortName, setSortName] = useState(false);
+  const [name, setName] = useState(null);
 
   const selectAction = (action, id) => {
     console.log(action)
@@ -37,6 +49,35 @@ function Qariah() {
     }
   }
 
+  const getDateValue = (date) => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+  }
+
+  const handleSubmit = (ev) => {
+    let start, end;
+    let parameter = ''
+
+    if (JSON.stringify(dateRange) != JSON.stringify([null, null])) {
+      start = format(dateRange[0], 'yyyy-MM-dd')
+      end = format(dateRange[1], 'yyyy-MM-dd')
+      parameter = `?start=${start}&end=${end}`
+    }
+
+    if (name && (JSON.stringify(dateRange) != JSON.stringify([null, null]))) {
+      parameter += `&name=${name}`
+    }
+    if (name && (JSON.stringify(dateRange) == JSON.stringify([null, null]))) {
+      parameter = `?name=${name}`
+    }
+    Inertia.visit('/qariah' + parameter, { 'only': ['qariahs'] })
+    setDateRange([null, null])
+    setName(null)
+  }
+
+  function truncate(str, n) {
+    return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
+  }
+
   return (
 
     <div className="h-full w-full">
@@ -51,16 +92,48 @@ function Qariah() {
           </div>
         </Button>
       </div>
+
+      <div className="filters flex items-center justify-end">
+        <div className='flex items-center w-2/4 pb-6 justify-between'>
+          <Form.Input onChange={({ target }) => setName(target.value)} icon='users' iconPosition='left' placeholder='Cari Qariah...' />
+          <div className="daterangepicker">
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DateRangePicker
+                startText="Dari"
+                endText="Sehingga"
+                value={dateRange}
+                inputFormat="dd/MM/yyyy"
+                onChange={(newValue) => {
+                  setDateRange(newValue)
+                }}
+                renderInput={(startProps, endProps) => (
+                  <React.Fragment>
+                    <TextField {...startProps} />
+                    <Box sx={{ mx: 2 }}> - </Box>
+                    <TextField {...endProps} />
+                  </React.Fragment>
+                )}
+              />
+            </LocalizationProvider>
+          </div>
+          <Button type="submit" primary onClick={handleSubmit}>
+            <div className="flex items-center">
+              Tapis
+            </div>
+          </Button>
+        </div>
+      </div>
       <div className="p-5 bg-white rounded-md shadow h-[100vh] overflow-y-scroll">
         {qariahs.data.length ? <Table singleLine>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Address</Table.HeaderCell>
-              <Table.HeaderCell>No K/P</Table.HeaderCell>
-              <Table.HeaderCell>Tel</Table.HeaderCell>
-              <Table.HeaderCell>Jantina</Table.HeaderCell>
-              <Table.HeaderCell width={2}>Jumlah Tanggungan</Table.HeaderCell>
+              <Table.HeaderCell><span className="hover:cursor-pointer" onClick={() => sortName(!sortName)}>Name</span></Table.HeaderCell>
+              <Table.HeaderCell><span>Alamat</span></Table.HeaderCell>
+              <Table.HeaderCell><span>No K/P</span></Table.HeaderCell>
+              <Table.HeaderCell><span>Tel</span></Table.HeaderCell>
+              <Table.HeaderCell><span>Jantina</span></Table.HeaderCell>
+              <Table.HeaderCell width={2}><span>Tanggungan</span></Table.HeaderCell>
+              <Table.HeaderCell width={2}><span>Trk. Dicipta</span></Table.HeaderCell>
               <Table.HeaderCell width={1}>Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -69,7 +142,7 @@ function Qariah() {
             {qariahs.data.length && qariahs.data.map((qariah, index) => (
               <Table.Row key={'qariah-' + index}>
                 <Table.Cell>{qariah.name}</Table.Cell>
-                <Table.Cell>{qariah.address}</Table.Cell>
+                <Table.Cell>{truncate(qariah.address, 40)}</Table.Cell>
                 <Table.Cell>{qariah.new_ic}</Table.Cell>
                 <Table.Cell>{qariah.tel}</Table.Cell>
                 <Table.Cell>{_i('sex', qariah.sex)}</Table.Cell>
@@ -81,6 +154,7 @@ function Qariah() {
                     </div>
                   </div>
                 </Table.Cell>
+                <Table.Cell>{qariah.created_at}</Table.Cell>
                 <Table.Cell>
                   <Button.Group basic compact>
                     <Button onClick={e => { e.preventDefault(); selectAction('view', qariah.id) }}>
