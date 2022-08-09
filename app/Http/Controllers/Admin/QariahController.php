@@ -20,7 +20,7 @@ class QariahController extends Controller
             $end = Carbon::parse(request()->end)->format('Y-m-d') .  ' 23:59:00';
             $q->whereBetween('created_at', [$start, $end]);
         })
-            ->orderBy('created_at', 'desc')->orderBy('name', 'asc')->paginate(10);
+            ->orderBy('created_at', 'desc')->paginate(10);
         return Inertia::render('Qariah/Qariah', compact('qariahs'));
     }
 
@@ -153,6 +153,7 @@ class QariahController extends Controller
             ], true, JSON_UNESCAPED_SLASHES),
             'others' => json_encode([
                 'vehicle' => $data['others']['vehicle'],
+                'no_vehicle' => $data['others']['noVehicle'],
                 'help_type' => $data['others']['typeOfHelp'],
                 'is_helped' => $data['others']['isHelped'],
                 'livestock' => $data['others']['livestockType'],

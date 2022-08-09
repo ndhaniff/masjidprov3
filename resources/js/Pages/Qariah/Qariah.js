@@ -14,7 +14,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import { DateRangePicker } from '@mui/lab'
 import { Box } from '@mui/system'
 
-import { format } from 'date-fns'
+import { format, parse, parseISO } from 'date-fns'
 
 const options = [
   { key: 'edit', icon: 'edit', text: 'Edit', value: 'edit' },
@@ -154,7 +154,7 @@ function Qariah() {
                     </div>
                   </div>
                 </Table.Cell>
-                <Table.Cell>{qariah.created_at}</Table.Cell>
+                <Table.Cell>{format(parseISO(qariah.created_at), 'yyyy-MM-dd hh:ii:s')}</Table.Cell>
                 <Table.Cell>
                   <Button.Group basic compact>
                     <Button onClick={e => { e.preventDefault(); selectAction('view', qariah.id) }}>

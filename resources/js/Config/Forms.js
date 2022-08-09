@@ -40,6 +40,7 @@ export default {
       { key: 4, value: 4, text: 'Cacat' },
     ],
     "disablity": [
+      { key: '', value: '', text: 'Tiada' },
       { key: 1, value: 1, text: 'Penglihatan' },
       { key: 2, value: 2, text: 'Pendengaran' },
       { key: 3, value: 3, text: 'Pertuturan' },
@@ -190,7 +191,6 @@ export default {
       { key: 4, value: 4, text: 'Motosikal' },
       { key: 5, value: 5, text: 'Basikal' },
       { key: 6, value: 6, text: 'Bot' },
-      { key: 7, value: 7, text: 'Tiada kenderaan' },
     ],
     "investment": [
       { key: 1, value: 1, text: 'Bank' },

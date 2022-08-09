@@ -13,6 +13,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import { TextField } from '@mui/material';
+import { format } from 'date-fns'
 
 const errorsMap = {
   "general.name": "Nama",
@@ -75,7 +76,23 @@ function Add() {
   // Utilities
   const [waterUtil, setWaterUtil] = useState('')
   const [elecUtil, setElecUtil] = useState('')
-  const [otherUtil, setOtherUtil] = useState('')
+  const [otherUtil, setOtherUtil] = useState({
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0,
+    13: 0,
+    14: 0,
+    15: 0,
+  })
   // Others
   const [vehicle, setVehicle] = useState({
     1: 0,
@@ -86,6 +103,7 @@ function Add() {
     6: 0,
     7: 0,
   })
+  const [noVehicle, setNoVehicle] = useState(0);
   const [typeOfInvestment, setTypeOfInvestment] = useState('')
   const [otherTypeOfInvestment, setOtherTypeOfInvestment] = useState('')
   const [livestockType, setLivestockType] = useState('')
@@ -114,7 +132,7 @@ function Add() {
       setChildCount(qariah.marital.child_count ? qariah.marital.child_count : '')
       setDependantCount(qariah.marital.dependance_count ? qariah.marital.dependance_count : '')
       setHealthStatus(qariah.health.physical ? qariah.health.physical : '')
-      setDisabilityType(qariah.health.physical ? qariah.health.physical : '')
+      setDisabilityType(qariah.health.disability_type ? qariah.health.disability_type : '')
       setOtherDisabilityType(qariah.health.other_disability_type ? qariah.health.other_disability_type : '')
       setDiseasesType(qariah.health.diseases_type ? qariah.health.diseases_type : '')
       setOtherDiseasesType(qariah.health.other_diseases_type ? qariah.health.other_diseases_type : '')
@@ -139,6 +157,7 @@ function Add() {
       setElecUtil(qariah.home_ownership.electric_supply ? qariah.home_ownership.electric_supply : '')
       setOtherUtil(qariah.home_ownership.other_supply ? qariah.home_ownership.other_supply : '')
       setVehicle(qariah.others.vehicle ? qariah.others.vehicle : '')
+      setNoVehicle(qariah.others.no_vehicle ? qariah.others.no_vehicle : '')
       setTypeOfInvestment(qariah.others.investment_type ? qariah.others.investment_type : '')
       setOtherTypeOfInvestment(qariah.others.other_investment_type ? qariah.others.other_investment_type : '')
       setLivestockType(qariah.others.livestock ? qariah.others.livestock : '')
@@ -192,7 +211,7 @@ function Add() {
   }, [errors])
 
   const getDobValue = (date) => {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+    return format(date, 'yyyy-MM-dd')
   }
 
   const getData = () => {
@@ -255,6 +274,7 @@ function Add() {
       },
       others: {
         vehicle,
+        noVehicle,
         typeOfInvestment,
         livestockType,
         help,
@@ -275,6 +295,7 @@ function Add() {
   }
 
   const handleSubmit = (e) => {
+    console.log(getData());
     e.preventDefault()
     Inertia.post('/qariah/create', getData())
   }
@@ -334,8 +355,8 @@ function Add() {
             <Form.Input readOnly={mode == 'view'} value={oldic} error={errors.hasOwnProperty('general.oldic')} onChange={mode == 'view' ? () => { } : (e, { value }) => setOldic(value)} label='No K/P Lama' width={4} />
             <Form.Input maxLength={14} readOnly={mode == 'view'} value={newic} error={errors.hasOwnProperty('general.newic')} onChange={mode == 'view' ? () => { } : (e) => handleIcChange(e)} required label='No K/P Baru' width={4} />
           </Form.Group>
-          <Form.Input readOnly={mode == 'view'} value={name} onChange={mode == 'view' ? () => { } : (e, { value }) => setName(value)} error={errors.hasOwnProperty('general.name')} required label="Nama Penuh (Seperti di dalam kad pengenalan.)" />
-          <Form.Input readOnly={mode == 'view'} value={address} onChange={mode == 'view' ? () => { } : (e, { value }) => setAddress(value)} error={errors.hasOwnProperty('general.address')} required label="Alamat" />
+          <Form.Input readOnly={mode == 'view'} value={name} onChange={mode == 'view' ? () => { } : (e, { value }) => setName(value.toUpperCase())} error={errors.hasOwnProperty('general.name')} required label="Nama Penuh (Seperti di dalam kad pengenalan.)" />
+          <Form.Input readOnly={mode == 'view'} value={address} onChange={mode == 'view' ? () => { } : (e, { value }) => setAddress(value.toUpperCase())} error={errors.hasOwnProperty('general.address')} required label="Alamat" />
           <Form.Group>
             <Form.Input readOnly={mode == 'view'} value={tel} onChange={mode == 'view' ? () => { } : (e, { value }) => setTel(value)} label='No Tel' width={4} />
             <Form.Input readOnly={mode == 'view'} value={hometel} onChange={mode == 'view' ? () => { } : (e, { value }) => setHometel(value)} label='No Tel Rumah' width={4} />
@@ -607,9 +628,19 @@ function Add() {
             <label>Bekalan Elektrik</label>
             <Select value={elecUtil} onChange={mode == 'view' ? () => { } : (e, { value }) => setElecUtil(value)} placeholder='Bekalan Elektrik' options={Data['utilities']['electric']} />
           </div>
-          <div className="field">
+          <div className="field col-span-3">
             <label>Lain-lain Kemudahan</label>
-            <Select value={otherUtil} onChange={mode == 'view' ? () => { } : (e, { value }) => setOtherUtil(value)} placeholder='Bekalan Elektrik' options={Data['utilities']['others']} />
+            <div className="grid grid-cols-2">
+              {Data['utilities']['others'].map((utl, index) => {
+                return (
+                  <li className="grid grid-cols-2 gap-4 mb-2" key={utl.key}>
+                    <Form.Checkbox checked={!!otherUtil[utl.key]} label={utl.text} readOnly={mode == 'view'} onChange={mode == 'view' ? () => { } : (e, { value }) => setOtherUtil(state => ({
+                      ...state, [utl.key]: otherUtil[utl.key] == 1 ? 0 : 1
+                    }))} />
+                  </li>
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -636,6 +667,8 @@ function Add() {
                 }))} type="number" min="0" />
               </li>
             ))}
+
+            <Form.Checkbox checked={!!noVehicle} label="Tiada Kenderaan" readOnly={mode == 'view'} onChange={mode == 'view' ? () => { } : (e, { value }) => setNoVehicle(noVehicle == 1 ? 0 : 1)} />
           </div>
           <div className="field">
             <label>Jenis Simpanan / Pelaburan</label>
