@@ -71,7 +71,7 @@ class QariahController extends Controller
     {
         $request->validate([
             'general' => 'required|array',
-            'general.newic' => 'required|numeric',
+            'general.newic' => 'required|regex:/^\d{6}\-\d{2}\-\d{4}$/',
             'general.name' => 'required|string',
             'general.address' => 'required|string',
             'general.sex' => 'required|numeric',
