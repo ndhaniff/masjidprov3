@@ -34,7 +34,7 @@ export const nav = {
         },
       ]
     }
-  ]
+  ],
 }
 
 export const navCat = ['utama', 'pengurusan']

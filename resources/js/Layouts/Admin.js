@@ -4,10 +4,12 @@ import { Link } from '@inertiajs/inertia-react'
 import classNames from 'classnames'
 import useWindowSize from './../Hooks/UseWindowSize';
 import { useEffect } from 'react';
+import { Inertia } from '@inertiajs/inertia'
 
 function Admin({ children }) {
   const [toggle, setToggle] = useState(false);
   const { width } = useWindowSize()
+  const token = document.head.querySelector('meta[name="csrf-token"]').content;
 
   useEffect(function () {
     if (width > 480) {
@@ -65,14 +67,20 @@ function Admin({ children }) {
                 }
               </div>
             ))}
+
           </ul>
         </aside>
       </nav>
 
       <div className="page-wrapper flex flex-col md:ml-[240px] min-h-[100vh] bg-slate-100 md:w-[calc(100%-240px)]">
-        <nav className="fixed top-0 z-[21] drop-shadow-sm md:left-[240px] navbar w-full h-[60px] border-b border-slate-200 bg-white">
-          <div onClick={() => setToggle(!toggle)} className=" h-[60px] flex items-center md:hidden w-[240px] px-10 py-2 ">
-            <div className="text-3xl font-semibold">Promasjid</div>
+        <nav className="fixed top-0 z-[21] drop-shadow-sm md:left-[240px] navbar w-[calc(100%-240px)] h-[60px] border-b border-slate-200 bg-white">
+          <div className="flex justify-end items-center w-full h-full">
+            <div className="hover:cursor-pointer font-bold pr-5">
+              <form action="/logout" method="POST">
+                <input type="hidden" name="_token" value={token} />
+                <button type="submit">Keluar</button>
+              </form>
+            </div>
           </div>
         </nav>
         <div className="page-content flex-1 mt-[60px] p-10">
@@ -81,7 +89,7 @@ function Admin({ children }) {
         <footer className='bg-white border-t border-slate-300 p-2 fixed bottom-0 left-0 md:left-[240px] text-center w-full md:w-[calc(100vw-240px)]'>
           <div>Dijahit khas oleh <a href="https://mercuweb.com" target="_blank">Mercuweb</a> &copy; {new Date().getFullYear()}</div>
         </footer>
-      </div>
+      </div >
     </div >
   )
 }
