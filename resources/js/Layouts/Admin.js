@@ -2,16 +2,31 @@ import React, { useState } from 'react'
 import { nav, navCat } from '../routes'
 import { Link } from '@inertiajs/inertia-react'
 import classNames from 'classnames'
+import useWindowSize from './../Hooks/UseWindowSize';
+import { useEffect } from 'react';
 
 function Admin({ children }) {
+  const [toggle, setToggle] = useState(false);
+  const { width } = useWindowSize()
+
+  useEffect(function () {
+    if (width > 480) {
+      setToggle(true)
+    } else {
+      setToggle(false)
+    }
+  }, []);
 
   return (
-    <div className="flex main-wrapper">
-      <nav className="fixed top-0 left-0 w-[240px] h-full drop-shadow-[7px_2px_9px_0px_rgba(0,0,0,0.25)]">
-        <div className="sidebar-header h-[60px] flex items-center w-[240px] px-10 py-2 border-r border-b border-slate-200">
+    <div className="md:flex main-wrapper">
+      <nav className={`fixed bg-white z-40 md:z-0 ${width <= 480 ? (toggle ? 'translate-x-[240px]' : 'translate-x-[-240px]') : ''} top-0 left-[-240px] md:left-0 w-[240px] h-[100vh] md:h-full drop-shadow-[7px_2px_9px_0px_rgba(0,0,0,0.25)]`}>
+        <div onClick={width <= 480 ? () => setToggle(!toggle) : () => { }} className="md:hidden sidebar-header h-[60px] flex items-center w-[240px] px-10 py-2 border-r border-b border-slate-200">
           <div className="text-3xl font-semibold">Promasjid</div>
         </div>
-        <aside className="sidebar border-r border-slate-200 w-[240] h-[100%] max-h-[calc(100%-60px)]">
+        <div className="hidden md:flex sidebar-header h-[60px] items-center w-[240px] px-10 py-2 border-r border-b border-slate-200">
+          <div className="text-3xl font-semibold">Promasjid</div>
+        </div>
+        <aside className="sidebar border-r border-slate-200 w-[240px] h-[100%] max-h-[calc(100%-60px)]">
           <ul className="px-10 pt-10 pb-12 nav">
             {navCat.map((category, i) => (
               <div key={`nav-cat-${i}`}>
@@ -54,9 +69,13 @@ function Admin({ children }) {
         </aside>
       </nav>
 
-      <div className="page-wrapper flex flex-col md:ml-[240px] min-h-[100vh] bg-slate-100 w-[calc(100%-240px)]">
-        <nav className="fixed top-0 z-[21] drop-shadow-sm left-[240px] navbar w-full h-[60px] border-b border-slate-200 bg-white"></nav>
-        <div className="page-content mt-[60px] p-10">
+      <div className="page-wrapper flex flex-col md:ml-[240px] min-h-[100vh] bg-slate-100 md:w-[calc(100%-240px)]">
+        <nav className="fixed top-0 z-[21] drop-shadow-sm md:left-[240px] navbar w-full h-[60px] border-b border-slate-200 bg-white">
+          <div onClick={() => setToggle(!toggle)} className=" h-[60px] flex items-center md:hidden w-[240px] px-10 py-2 ">
+            <div className="text-3xl font-semibold">Promasjid</div>
+          </div>
+        </nav>
+        <div className="page-content flex-1 mt-[60px] p-10">
           {children}
         </div>
         <footer className='bg-white border-t border-slate-300 p-2 fixed bottom-0 left-0 md:left-[240px] text-center w-full md:w-[calc(100vw-240px)]'>

@@ -19,7 +19,7 @@ mix.js('resources/js/app.js', 'public/js')
     ]);
 
 mix.webpackConfig(require('./webpack.config'));
-
+mix.disableNotifications()
 if (mix.inProduction()) {
     mix.version();
 }

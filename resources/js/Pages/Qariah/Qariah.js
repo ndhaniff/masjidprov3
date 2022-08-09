@@ -39,7 +39,7 @@ function Qariah() {
 
   return (
 
-    <div>
+    <div className="h-full w-full">
       <div className="relative">
         <h1 className='mb-1'>Senarai Ahli Qariah</h1>
         <p>Penduduk Qariah Cheruk Tokun Bawah</p>
@@ -51,8 +51,8 @@ function Qariah() {
           </div>
         </Button>
       </div>
-      <div className="rounded-md shadow bg-white p-5">
-        {qariahs.data.length ? <Table compact selectable>
+      <div className="p-5 bg-white rounded-md shadow h-[100vh] overflow-y-scroll">
+        {qariahs.data.length ? <Table singleLine>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
@@ -60,7 +60,7 @@ function Qariah() {
               <Table.HeaderCell>No K/P</Table.HeaderCell>
               <Table.HeaderCell>Tel</Table.HeaderCell>
               <Table.HeaderCell>Jantina</Table.HeaderCell>
-              <Table.HeaderCell width={2}>Jumlah Isi Rumah</Table.HeaderCell>
+              <Table.HeaderCell width={2}>Jumlah Tanggungan</Table.HeaderCell>
               <Table.HeaderCell width={1}>Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -75,7 +75,7 @@ function Qariah() {
                 <Table.Cell>{_i('sex', qariah.sex)}</Table.Cell>
                 <Table.Cell>
                   <div className="flex items-center">
-                    <svg htmltitle="Lihat Tanggungan" className='hover:cursor-pointer mr-4' onClick={() => Inertia.visit('/qariah/relatives/list/' + qariah.id, { 'method': 'get' })} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"><path fill="none" d="M0 0h24v24H0z" /><path fill="currentColor" d="M12 3c5.392 0 9.878 3.88 10.819 9-.94 5.12-5.427 9-10.819 9-5.392 0-9.878-3.88-10.819-9C2.121 6.88 6.608 3 12 3zm0 16a9.005 9.005 0 0 0 8.777-7 9.005 9.005 0 0 0-17.554 0A9.005 9.005 0 0 0 12 19zm0-2.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" /></svg>
+                    <svg htmltitle="Lihat Tanggungan" className='mr-4 hover:cursor-pointer' onClick={() => Inertia.visit('/qariah/relatives/list/' + qariah.id, { 'method': 'get' })} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"><path fill="none" d="M0 0h24v24H0z" /><path fill="currentColor" d="M12 3c5.392 0 9.878 3.88 10.819 9-.94 5.12-5.427 9-10.819 9-5.392 0-9.878-3.88-10.819-9C2.121 6.88 6.608 3 12 3zm0 16a9.005 9.005 0 0 0 8.777-7 9.005 9.005 0 0 0-17.554 0A9.005 9.005 0 0 0 12 19zm0-2.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" /></svg>
                     <div>
                       {qariah.relative_count} Orang
                     </div>
