@@ -12,6 +12,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import { TextField } from '@mui/material';
+import { format } from 'date-fns'
 
 const errorsMap = {
   "full_name": "Nama",
@@ -58,7 +59,7 @@ function Add() {
   }, [relative])
 
   const getDobValue = (date) => {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`
+    return format(date, 'yyyy-MM-dd')
   }
 
   const validateNumberOnly = (e) => {
