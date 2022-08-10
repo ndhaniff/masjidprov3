@@ -153,6 +153,7 @@ export default {
   },
   'utilities': {
     'electric': [
+      { key: '', value: '', text: 'Tiada' },
       { key: 1, value: 1, text: 'Elektrik' },
       { key: 2, value: 2, text: 'Generator' },
       { key: 3, value: 3, text: 'Pelita / Gasolin' },
@@ -160,6 +161,7 @@ export default {
       { key: 5, value: 5, text: 'Lain-lain' }
     ],
     'water': [
+      { key: '', value: '', text: 'Tiada' },
       { key: 1, value: 1, text: 'Air Paip' },
       { key: 2, value: 2, text: 'Perigi / Sungai' },
       { key: 3, value: 3, text: 'Berkongsi Meter' },

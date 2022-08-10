@@ -20,7 +20,7 @@ class QariahController extends Controller
             $end = Carbon::parse(request()->end)->format('Y-m-d') .  ' 23:59:00';
             $q->whereBetween('created_at', [$start, $end]);
         })
-            ->orderBy('created_at', 'desc')->paginate(10);
+            ->orderBy('name', 'desc')->paginate(10);
         return Inertia::render('Qariah/Qariah', compact('qariahs'));
     }
 
