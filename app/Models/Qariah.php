@@ -12,7 +12,7 @@ class Qariah extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
-    protected $appends = ['relative_count'];
+    protected $appends = ['relative_count', 'sex_text'];
 
     public function getRelativeCountAttribute()
     {
@@ -22,5 +22,10 @@ class Qariah extends Model
     public function relatives()
     {
         return $this->hasMany(QariahRelative::class, 'qariah_id', 'id');
+    }
+
+    public function getSexTextAttribute()
+    {
+        return $this->sex ? 'Lelaki' : 'Perempuan';
     }
 }

@@ -1,8 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap");
+@import url("https://cdn.syncfusion.com/ej2/fabric.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap");
 
 * {
     font-family: Quicksand, sans-serif;
@@ -21,4 +22,11 @@
 .daterangepicker label {
     line-height: 0.8rem;
     color: #ccc;
+}
+
+/* ------------------------------- Overwrites ------------------------------- */
+.ui.form .field > label,
+.ui.checkbox label,
+.ui.checkbox + label {
+    @apply dark:text-white !important;
 }

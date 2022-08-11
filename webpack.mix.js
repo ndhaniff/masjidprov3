@@ -10,10 +10,9 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-
+mix.extract(['react', '@mui/lab', '@mui/material', 'bootstrap', 'axios', 'tailwind.css'])
 mix.js('resources/js/app.js', 'public/js')
     .react()
-    .sourceMaps(false, 'source-map')
     .postCss("resources/css/app.css", "public/css", [
         require("tailwindcss"),
     ]);

@@ -13,14 +13,27 @@ class QariahController extends Controller
 {
     public function index(Request $request)
     {
-        $qariahs = Qariah::select(['*', DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')")])->when($request->has('name'), function ($q) {
-            $q->whereRaw("LOWER(name) like '%" . request()->name . "%'");
-        })->when($request->has('start') && $request->has('end'), function ($q) {
-            $start = Carbon::parse(request()->start)->format('Y-m-d') . ' 00:00:00';
-            $end = Carbon::parse(request()->end)->format('Y-m-d') .  ' 23:59:00';
-            $q->whereBetween('created_at', [$start, $end]);
-        })
-            ->orderBy('name', 'asc')->paginate(10);
+        $defaultSortEnable = !$request->has('nameSort') && !$request->has('relative_countSort') && !$request->has('created_atSort') && !$request->has('addressSort');
+
+        $qariahs = Qariah::leftJoin('qariah_relatives as qr', 'qr.qariah_id', '=', 'qariahs.id')
+            ->select(['qariahs.*', DB::raw("COUNT(qr.qariah_id) as relative_count2"), DB::raw("DATE_FORMAT(qariahs.created_at, '%Y-%m-%d') as created")])->when($request->has('name'), function ($q) {
+                $q->whereRaw("LOWER(name) like '%" . request()->name . "%'");
+            })->when($request->has('start') && $request->has('end'), function ($q) {
+                $start = Carbon::parse(request()->start)->format('Y-m-d') . ' 00:00:00';
+                $end = Carbon::parse(request()->end)->format('Y-m-d') .  ' 23:59:00';
+                $q->whereBetween('qariahs.created_at', [$start, $end]);
+            })->when($request->has('nameSort'), function ($q) {
+                $q->orderBy('qariahs.name', request()->nameSort);
+            })->when($request->has('created_atSort'), function ($q) {
+                $q->orderBy('qariahs.created_at', request()->created_atSort);
+            })->when($request->has('addressSort'), function ($q) {
+                $q->orderBy('qariahs.address', request()->addressSort);
+            })->groupBy('qariahs.id')->when($request->has('relative_countSort'), function ($q) {
+                $q->orderBy('relative_count2', request()->relative_countSort);
+            })->when($defaultSortEnable, function ($q) {
+                $q->orderBy('qariahs.name', 'asc');
+            })->paginate($request->has('per_page') ? $request->per_page : 10);
+
         return Inertia::render('Qariah/Qariah', compact('qariahs'));
     }
 

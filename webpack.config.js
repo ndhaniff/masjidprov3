@@ -1,12 +1,12 @@
 const path = require('path');
 module.exports = {
+  mode: 'development',
   resolve: {
     fallback: {
       "fs": false
     },
     alias: {
-      '@': path.resolve('resources/js'),
-      ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
+      '@': path.resolve('resources/js')
     },
   },
   output: {
