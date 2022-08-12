@@ -26,6 +26,6 @@ class Qariah extends Model
 
     public function getSexTextAttribute()
     {
-        return $this->sex ? 'Lelaki' : 'Perempuan';
+        return $this->sex == 1 ? 'Lelaki' : 'Perempuan';
     }
 }
