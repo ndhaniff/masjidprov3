@@ -3,7 +3,8 @@ import Admin from "./../../Layouts/Admin";
 import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineEye } from "react-icons/ai";
+import { TbUsers } from "react-icons/tb";
 import DataTable from "react-data-table-component";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import {
@@ -148,6 +149,11 @@ const Qariah = () => {
     };
     const handleEdit = (row) => {
         selectAction("edit", row.id);
+    };
+    const handleNav = (row, url) => {
+        Inertia.visit("/qariah/" + url + "/" + row.id, {
+            method: "get",
+        });
     };
 
     const handleClear = () => {
@@ -330,6 +336,19 @@ const Qariah = () => {
                                         position="BottomCenter"
                                     >
                                         <RiDeleteBin5Line />
+                                    </TooltipComponent>
+                                </button>
+                                <button
+                                    className="text-md"
+                                    onClick={() =>
+                                        handleNav(row, "relatives/list")
+                                    }
+                                >
+                                    <TooltipComponent
+                                        content="Tanggungan"
+                                        position="BottomCenter"
+                                    >
+                                        <TbUsers />
                                     </TooltipComponent>
                                 </button>
                                 <button

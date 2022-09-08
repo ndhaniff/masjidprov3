@@ -42,7 +42,7 @@ const Navbar = () => {
                 customFunc={() => setActiveMenu((prev) => !prev)}
                 icon={<AiOutlineMenu />}
             ></NavButton>
-            <div class="flex gap-1 items-center">
+            <div className="flex gap-1 items-center">
                 <div className="hover:cursor-pointer font-bold pr-5">
                     <form action="/logout" method="POST">
                         <input type="hidden" name="_token" value={token} />
